@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "babel ./bin/www -D --out-dir dist",
-    "start": "npm run build && nodemon dist/www"
+    "build": "babel ./src -D --out-dir dist",
+    "start": "npm run build && nodemon dist/bin/www.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

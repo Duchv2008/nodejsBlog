@@ -4,7 +4,9 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+ import app from '../app.js';
+
+// var app = require('../app');
 var debug = require('debug')('devblog:server');
 var http = require('http');
 
@@ -82,7 +84,7 @@ function onError(error) {
  */
 
 function onListening() {
-  require('../config/database.jsx')
+  require('../config/database.js').default
 
   // // import Router
   // fs.readdirSync(path.join(__dirname, '../routes')).map(file => {
