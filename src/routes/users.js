@@ -1,18 +1,8 @@
-import { Router } from 'express';
+import { Router } from "express";
+import controller from "../controllers/users_controller";
 var router = Router();
-import User from '../models/user.js';
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  User.find({})
-    .select('username')
-    .then(users => {
-      console.log(users)
-      res.json(users);
-    })
-    .catch(err => {
-      res.status(400).send(err.errors);
-    })
-});
+router.get("/", controller.index);
+// router.get("/:id", controller.show);
 
 export default router;
