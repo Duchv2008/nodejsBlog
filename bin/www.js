@@ -7,8 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('devblog:server');
 var http = require('http');
-const fs = require('fs');
-const path = require('path');
 
 /**
  * Get port from environment and store in Express.
