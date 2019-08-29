@@ -9,7 +9,7 @@ exports.isAuthenticated = function (req, res, next) {
       jwt.verify(jwtToken, "this is private key", function (err, payload) {
         if (err) {
           res.status(401).json({
-            "error": "Not authentication"
+            "error": "Token is valid"
           });
         } else {
           let userId = payload.id;
