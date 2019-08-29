@@ -3,8 +3,7 @@ import express, { json, urlencoded } from "express";
 import { join } from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-var debug = require("debug")("devblog:server");
-var http = require("http");
+import bodyParser from "body-parser";
 import usersRouter from "./routes/users";
 
 const app = express();
@@ -15,19 +14,17 @@ app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(json());
+app.use(bodyParser.json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
 
-// // app.use('/', indexRouter);
 app.use("/users", usersRouter);
 
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
