@@ -1,4 +1,5 @@
 import User from "models/user";
+import Token from "models/token";
 import jwt from "jsonwebtoken";
 
 exports.isAuthenticated = function (req, res, next) {
@@ -9,25 +10,39 @@ exports.isAuthenticated = function (req, res, next) {
       jwt.verify(jwtToken, "this is private key", function (err, payload) {
         if (err) {
           res.status(401).json({
-            "error": "Token is valid"
+            "message": "Token is valid"
           });
         } else {
           let userId = payload.id;
-          // find
-          User.findById(userId)
-            .then((user) => {
-              req.current_user = user;
-              next();
-            }, (e) => {
-              res.status(401).json({
-                "error": "Not authentication"
+          User.findById(userId, function(err, user) {
+            if (user) {
+              let hash_token = payload.hash_token;
+              console.log(`isAuthenticated token_id ${hash_token}`)
+              Token.findOne({hash_token: hash_token}, function(err, token) {
+                if (token) {
+                  console.log(`isAuthenticated then ${token}`)
+                  req.current_user = user;
+                  req.hash_token = payload.hash_token;
+                  next();
+                } else {
+                  res.status(401).json({
+                    "message": "Not authentication",
+                    "error": err
+                  });
+                }
               });
-            });
+            } else {
+              res.status(401).json({
+                "message": "Not authorize",
+                "error": err
+              });
+            }
+          });
         }
       });
     } else {
       res.status(401).json({
-        "error": "Not authentication"
+        "message": "Not authentication"
       });
     }
   } else {

@@ -1,6 +1,7 @@
 import User from "models/user";
 import mongoose from "mongoose";
 
+
 const index = (req, res) => {
   User.find({})
     .select("username")

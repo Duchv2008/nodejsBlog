@@ -1,6 +1,7 @@
 import User from "models/user";
+import Token from "models/token";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
+var randtoken = require("rand-token");
 
 const create = (req, res) => {
   let username = req.body.username;
@@ -8,20 +9,29 @@ const create = (req, res) => {
 
   User.findOne({username: username})
     .then((user) => {
-      if (user.comparePassword(password)) {
-        let created_at = Date.now();
-        res.json({
-          "access_token": user.generateJWTToken(created_at),
-          "refresh_token": user.generateJWTRefreshToken(created_at)
+      if (user.comparePassword(password)) { 
+        var hash_token = randtoken.generate(16);
+        Token.findOneAndUpdate({user_id: user.id}, { $set: {hash_token: hash_token, user_id: user.id}}, {upsert: true, new: true}, function(err, token) {
+          if (err) {
+            res.status(401).json({
+              "error": e
+            });
+          } else {
+            let created_at = Date.now();
+            res.json({
+              "access_token": user.generateJWTToken(created_at, hash_token),
+              "refresh_token": user.generateJWTRefreshToken(created_at)
+            });
+          }
         });
       } else {
         res.status(401).json({
-          "error": "Login faile"
+          "error": "Login faile 2"
         });
       }
     }, (e) => {
       res.status(401).json({
-        "error": "Login faile"
+        "error": "Login faile 3"
       });
     });
 };
@@ -46,11 +56,20 @@ const refreshToken = (req, res) => {
             // find
             User.findById(userId)
               .then((user) => {
-                let created_at = Date.now();
-                res.json({
-                  "access_token": user.generateJWTToken(created_at),
-                  "refresh_token": user.generateJWTRefreshToken(created_at)
-                });
+                var hash_token = randtoken.generate(16);
+                Token.findOneAndUpdate({user_id: user.id}, { $set: {hash_token: hash_token, user_id: user.id}}, {upsert: true, new: true}, function(err, token) {
+                  if (err) {
+                    res.status(401).json({
+                      "error": e
+                    });
+                  } else {
+                    let created_at = Date.now();
+                    res.json({
+                      "access_token": user.generateJWTToken(created_at, hash_token),
+                      "refresh_token": user.generateJWTRefreshToken(created_at)
+                    });
+                  }
+                });                
               }, (e) => {
                 res.status(403).json({
                   "error": "Refresh token fail"
@@ -73,7 +92,19 @@ const refreshToken = (req, res) => {
 };
 
 const destroy = (req, res) => {
-  res.json(req.current_user);
+  var hash_token = req.hash_token;
+  console.log(`destroy token_id ${hash_token}`)
+  Token.findOneAndRemove({hash_token: hash_token}, function (err) {
+    console.log(`destroy ${err}`)
+    if (err) {
+      res.status(403).json({
+        "error": "Logout fail",
+        err: err
+      });
+    } else {
+      res.status(200).json();
+    }
+  });
 };
 
 export default {

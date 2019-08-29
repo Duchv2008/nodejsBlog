@@ -32,8 +32,8 @@ UserSchema.methods.comparePassword = function(password) {
   return bcrypt.compareSync(password, this.password_digest);
 };
 
-UserSchema.methods.generateJWTToken = function (created_at) {
-  var payload = { username: this.username, id: this.id, created_at: created_at };
+UserSchema.methods.generateJWTToken = function (created_at, hash_token) {
+  var payload = { username: this.username, id: this.id, created_at: created_at, hash_token: hash_token };
   var privateKey = "this is private key"; // Gen Hash
   var jwtToken = jwt.sign(payload, privateKey, { expiresIn: "1h" }); // miliseconds
   return jwtToken;
