@@ -31,7 +31,7 @@ const create = (req, res) => {
     .then( (response) => {
       res.json(response);
     }).catch(e => {
-      res.json(e);
+      res.status(400).json(e);
     });
 };
 

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import bodyParser from "body-parser";
 import usersRouter from "./routes/users";
+import sessionsRouter from "./routes/sessions";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
 
 app.use("/users", usersRouter);
+app.use("/", sessionsRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
