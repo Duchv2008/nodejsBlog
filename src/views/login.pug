@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  form(action="/login" method="post")
+    label(for="username") username
+    input(type="text" name="username" placeholder="username")
+    label(for="password") password
+    input(type="password" name="password" placeholder="username")
+    input(type="submit" value="Login")

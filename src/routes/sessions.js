@@ -1,10 +1,11 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import controller from 'controllers/sessions_controller';
-import authenticate from 'controllers/authenticate';
 var router = Router();
 
+router.get('/login', (req, res, next) => {
+  res.render('login', { title: 'Login' });
+});
+
 router.post('/login', controller.create);
-router.delete('/logout', authenticate.isAuthenticated, controller.destroy);
-router.post('/refresh_token', controller.refreshToken);
 
 export default router;
