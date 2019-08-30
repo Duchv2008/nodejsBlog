@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import controller from '../controllers/users_controller';
-import authenticate from '../controllers/authenticate';
+import controller from 'controllers/users_controller';
+import authenticate from 'controllers/authenticate';
 var router = Router();
 
 router.get('/', controller.index);

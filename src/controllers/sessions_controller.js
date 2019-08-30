@@ -6,7 +6,7 @@ var randtoken = require('rand-token');
 const create = (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
-
+  console.log(`process.env ${JSON.stringify(process.env.DATABASE_URI)}`);
   User.findOne({ username: username }).then(
     user => {
       if (user.comparePassword(password)) {
@@ -46,7 +46,10 @@ const create = (req, res) => {
 const refreshToken = (req, res) => {
   let refresh_token = req.body.refresh_token;
   if (req.headers) {
-    jwt.verify(refresh_token, 'this is refresh token', function(err, payload) {
+    jwt.verify(refresh_token, process.env.REFRESH_TOKEN_PRIVATE_KEY, function(
+      err,
+      payload,
+    ) {
       if (err) {
         res.status(403).json({
           error: 'Refresh token is expired',

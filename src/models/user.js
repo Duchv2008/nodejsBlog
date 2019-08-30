@@ -39,16 +39,18 @@ UserSchema.methods.generateJWTToken = function(created_at, hash_token) {
     created_at: created_at,
     hash_token: hash_token,
   };
-  var privateKey = 'this is private key'; // Gen Hash
-  var jwtToken = jwt.sign(payload, privateKey, { expiresIn: '1h' }); // miliseconds
+  var jwtToken = jwt.sign(payload, process.env.ACCESS_TOKEN_PRIVATE_KEY, {
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRED_TIME,
+  }); // miliseconds
   return jwtToken;
 };
 
 UserSchema.methods.generateJWTRefreshToken = function(created_at) {
   var payload = { id: this.id, created_at: created_at };
-  var privateKey = 'this is refresh token';
 
-  var jwtToken = jwt.sign(payload, privateKey, { expiresIn: '2 days' });
+  var jwtToken = jwt.sign(payload, process.env.REFRESH_TOKEN_PRIVATE_KEY, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRED_TIME,
+  });
   return jwtToken;
 };
 

@@ -4,8 +4,8 @@ import { join } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
-import usersRouter from './routes/users';
-import sessionsRouter from './routes/sessions';
+import usersRouter from 'routes/users';
+import sessionsRouter from 'routes/sessions';
 
 const app = express();
 

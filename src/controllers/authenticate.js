@@ -7,7 +7,10 @@ exports.isAuthenticated = function(req, res, next) {
   if (req.headers) {
     let jwtToken = req.headers['authorization'];
     if (jwtToken) {
-      jwt.verify(jwtToken, 'this is private key', function(err, payload) {
+      jwt.verify(jwtToken, process.env.ACCESS_TOKEN_PRIVATE_KEY, function(
+        err,
+        payload,
+      ) {
         if (err) {
           res.status(401).json({
             message: 'Token is valid',
