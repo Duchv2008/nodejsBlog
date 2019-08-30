@@ -4,7 +4,7 @@
     "indent": ["error", 2],
     "no-console": "warn", // In console
     "semi": ["warn", "always"], // Chấm phảy cuối câu lệnh
-    "quotes": ["error", "double"] // Quote
+    "quotes": ["error", "single"] // Quote
   },
   "settings": {
     "import/resolver": {
@@ -13,5 +13,5 @@
         "rootPathSuffix": "./src"
       }
     }
-  },
+  }
 }

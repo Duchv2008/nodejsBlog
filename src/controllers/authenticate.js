@@ -1,40 +1,40 @@
-import User from "models/user";
-import Token from "models/token";
-import jwt from "jsonwebtoken";
+import User from 'models/user';
+import Token from 'models/token';
+import jwt from 'jsonwebtoken';
 
-exports.isAuthenticated = function (req, res, next) {
-  console.log(req.headers["authorization"]);
+exports.isAuthenticated = function(req, res, next) {
+  console.log(req.headers['authorization']);
   if (req.headers) {
-    let jwtToken = req.headers["authorization"];
+    let jwtToken = req.headers['authorization'];
     if (jwtToken) {
-      jwt.verify(jwtToken, "this is private key", function (err, payload) {
+      jwt.verify(jwtToken, 'this is private key', function(err, payload) {
         if (err) {
           res.status(401).json({
-            "message": "Token is valid"
+            message: 'Token is valid',
           });
         } else {
           let userId = payload.id;
           User.findById(userId, function(err, user) {
             if (user) {
               let hash_token = payload.hash_token;
-              console.log(`isAuthenticated token_id ${hash_token}`)
-              Token.findOne({hash_token: hash_token}, function(err, token) {
+              console.log(`isAuthenticated token_id ${hash_token}`);
+              Token.findOne({ hash_token: hash_token }, function(err, token) {
                 if (token) {
-                  console.log(`isAuthenticated then ${token}`)
+                  console.log(`isAuthenticated then ${token}`);
                   req.current_user = user;
                   req.hash_token = payload.hash_token;
                   next();
                 } else {
                   res.status(401).json({
-                    "message": "Not authentication",
-                    "error": err
+                    message: 'Not authentication',
+                    error: err,
                   });
                 }
               });
             } else {
               res.status(401).json({
-                "message": "Not authorize",
-                "error": err
+                message: 'Not authorize',
+                error: err,
               });
             }
           });
@@ -42,12 +42,12 @@ exports.isAuthenticated = function (req, res, next) {
       });
     } else {
       res.status(401).json({
-        "message": "Not authentication"
+        message: 'Not authentication',
       });
     }
   } else {
     res.status(401).json({
-      "error": "Not authentication"
+      error: 'Not authentication',
     });
   }
 };
